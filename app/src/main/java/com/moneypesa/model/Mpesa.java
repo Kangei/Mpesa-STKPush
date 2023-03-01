@@ -10,6 +10,7 @@ import com.moneypesa.interfaces.STKQueryListener;
 import com.moneypesa.interfaces.TokenListener;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -18,10 +19,10 @@ import rx.subscriptions.CompositeSubscription;
 
 public class Mpesa {
     private static final String TAG = Mpesa.class.getSimpleName();
-    private CompositeSubscription mCompositeSubscription;
-    private String consumerKey;
-    private String consumerSecret;
-    private Mode mode;
+    private final CompositeSubscription mCompositeSubscription;
+    private final String consumerKey;
+    private final String consumerSecret;
+    private final Mode mode;
 
     public Mpesa(String consumerKey, String consumerSecret, Mode mode) {
         this.consumerKey = consumerKey;
@@ -29,12 +30,14 @@ public class Mpesa {
         this.mode = mode;
         this.mCompositeSubscription = new CompositeSubscription();
     }
+
     public void getToken(final TokenListener tokenListener) throws UnsupportedEncodingException {
         if (tokenListener == null) {
             throw new RuntimeException("Activity must implement TokenListener");
         }
 
-        mCompositeSubscription.add(RetroClient.getApiService(mode).generateAccessToken(getAuth())
+        mCompositeSubscription.add(RetroClient.getApiService(mode)
+                .generateAccessToken(getAuth())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Token>() {
@@ -50,14 +53,12 @@ public class Mpesa {
 
                     @Override
                     public void onNext(Token token) {
-
+                        tokenListener.TokenListener(token);
                     }
-
-
                 }));
     }
 
-    private String getAuth() throws UnsupportedEncodingException {
+    private String getAuth() {
         if (consumerKey.isEmpty()) {
             throw new RuntimeException("Consumer key cannot be empty");
         }
@@ -67,14 +68,16 @@ public class Mpesa {
         }
 
         String consumerKeySecret = consumerKey + ":" + consumerSecret;
-        byte[] bytes = consumerKeySecret.getBytes("ISO-8859-1");
+        byte[] bytes = consumerKeySecret.getBytes(StandardCharsets.ISO_8859_1);
         return "Basic " + Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
+
     public void startStkPush(Token token, STKPush stkPush, final STKListener stkListener) {
 
         if (token == null) {
             throw new RuntimeException("Token cannot be null");
         }
+
         if (stkPush == null) {
             throw new RuntimeException("STKPush cannot be null");
         }
@@ -135,7 +138,9 @@ public class Mpesa {
         if (stkQueryListener == null) {
             throw new RuntimeException("Activity must implement STKQueryListener");
         }
-        mCompositeSubscription.add(RetroClient.getApiService(mode).stkPushQuery(getAuthorization(token.getAccessToken()), stkQuery)
+
+        mCompositeSubscription.add(RetroClient.getApiService(mode)
+                .stkPushQuery(getAuthorization(token.getAccessToken()), stkQuery)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<STKPushResponse>() {
@@ -143,6 +148,7 @@ public class Mpesa {
                     public void onCompleted() {
 
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         stkQueryListener.onError(e);

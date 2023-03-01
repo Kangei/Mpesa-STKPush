@@ -1,5 +1,7 @@
 package com.moneypesa.api.response;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -14,13 +16,22 @@ public class STKPushResponse {
     private String checkoutRequestID;
     @SerializedName("ResultCode")
     @Expose
-    private Integer resultCode;
+    private String resultCode;
+    @SerializedName("ResponseDescription")
+    @Expose
+    private String responseDescription;
+    @SerializedName("CustomerMessage")
+    @Expose
+    private String customerMessage;
     @SerializedName("ResultDesc")
     @Expose
     private String resultDesc;
     @SerializedName("CallbackMetadata")
     @Expose
     private CallbackMetadata callbackMetadata;
+    @SerializedName("Status")
+    @Expose
+    private String status = "PROCESSING";
 
     public String getMerchantRequestID() {
         return merchantRequestID;
@@ -38,12 +49,28 @@ public class STKPushResponse {
         this.checkoutRequestID = checkoutRequestID;
     }
 
-    public Integer getResultCode() {
+    public String getResultCode() {
         return resultCode;
     }
 
-    public void setResultCode(Integer resultCode) {
+    public void setResultCode(String resultCode) {
         this.resultCode = resultCode;
+    }
+
+    public String getResponseDescription() {
+        return responseDescription;
+    }
+
+    public void setResponseDescription(String responseDescription) {
+        this.responseDescription = responseDescription;
+    }
+
+    public String getCustomerMessage() {
+        return customerMessage;
+    }
+
+    public void setCustomerMessage(String customerMessage) {
+        this.customerMessage = customerMessage;
     }
 
     public String getResultDesc() {
@@ -62,6 +89,15 @@ public class STKPushResponse {
         this.callbackMetadata = callbackMetadata;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @NonNull
     public String toString() {
         return "{\"MerchantRequestID\":\"" + merchantRequestID + "\"," +
                 "\"checkoutRequestID\":\"" + checkoutRequestID + "\"," +
