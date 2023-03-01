@@ -98,18 +98,22 @@ public class STKPushResponse {
     }
 
     @NonNull
+    @Override
     public String toString() {
-        return "{\"MerchantRequestID\":\"" + merchantRequestID + "\"," +
-                "\"checkoutRequestID\":\"" + checkoutRequestID + "\"," +
-                "\"resultCode\":\"" + resultCode + "\"," +
-                "\"resultDesc\":\"" + resultDesc + "\"," +
-                "\"callbackMetadata\":\"" + callbackMetadata +
-                "\"}";
+        return "STKPushResponse{" +
+                "merchantRequestID='" + merchantRequestID + '\'' +
+                ", checkoutRequestID='" + checkoutRequestID + '\'' +
+                ", resultCode='" + resultCode + '\'' +
+                ", responseDescription='" + responseDescription + '\'' +
+                ", customerMessage='" + customerMessage + '\'' +
+                ", resultDesc='" + resultDesc + '\'' +
+                ", callbackMetadata=" + callbackMetadata +
+                ", status='" + status + '\'' +
+                '}';
     }
 
     public String toJson(STKPushResponse stkPushResponse) {
         Gson gson = new Gson();
         return gson.toJson(stkPushResponse);
     }
-
 }
