@@ -16,7 +16,7 @@ public class STKPushResponse {
     private String checkoutRequestID;
     @SerializedName("ResultCode")
     @Expose
-    private String resultCode;
+    private Long resultCode;
     @SerializedName("ResponseDescription")
     @Expose
     private String responseDescription;
@@ -49,11 +49,11 @@ public class STKPushResponse {
         this.checkoutRequestID = checkoutRequestID;
     }
 
-    public String getResultCode() {
+    public Long getResultCode() {
         return resultCode;
     }
 
-    public void setResultCode(String resultCode) {
+    public void setResultCode(Long resultCode) {
         this.resultCode = resultCode;
     }
 
